@@ -178,6 +178,10 @@ type RevisionSpec struct {
 	// https://github.com/knative/serving/issues/627
 	// +optional
 	Container corev1.Container `json:"container,omitempty"`
+
+	// Any custom data specified by the user
+	// +optional
+	CustomData map[string]string `json:"customData,omitempty"`
 }
 
 const (
