@@ -23,6 +23,7 @@ import (
 	"github.com/knative/serving/pkg/apis/serving/v1alpha1"
 	"github.com/knative/serving/pkg/queue"
 	"github.com/knative/serving/pkg/reconciler/v1alpha1/revision/resources/names"
+	"github.com/knative/serving/pkg/reconciler/v1alpha1/revision/resources/utils"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -43,7 +44,7 @@ var (
 func MakeK8sService(rev *v1alpha1.Revision) *corev1.Service {
 	labels := makeLabels(rev)
 	labels[autoscaling.KPALabelKey] = names.KPA(rev)
-	return &corev1.Service{
+	service := corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:            names.K8sService(rev),
 			Namespace:       rev.Namespace,
@@ -58,4 +59,6 @@ func MakeK8sService(rev *v1alpha1.Revision) *corev1.Service {
 			},
 		},
 	}
+	utils.AddCustomDataFromRevisionSpecToServiceAnnotations(&service, rev)
+	return &service
 }

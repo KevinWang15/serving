@@ -56,4 +56,6 @@ const (
 	// ServiceLabelKey is the label key attached to a Route and Configuration indicating by
 	// which Service they are created.
 	ServiceLabelKey = GroupName + "/service"
+
+	CustomDataAnnotationKey = GroupName + "/customData"
 )

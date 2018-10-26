@@ -267,6 +267,13 @@ func (in *RevisionSpec) DeepCopyInto(out *RevisionSpec) {
 		}
 	}
 	in.Container.DeepCopyInto(&out.Container)
+	if in.CustomData != nil {
+		in, out := &in.CustomData, &out.CustomData
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	return
 }
 

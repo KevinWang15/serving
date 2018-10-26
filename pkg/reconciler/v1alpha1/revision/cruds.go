@@ -27,6 +27,7 @@ import (
 	"github.com/knative/serving/pkg/apis/serving/v1alpha1"
 	"github.com/knative/serving/pkg/reconciler/v1alpha1/revision/config"
 	"github.com/knative/serving/pkg/reconciler/v1alpha1/revision/resources"
+	"github.com/knative/serving/pkg/reconciler/v1alpha1/revision/resources/utils"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/equality"
@@ -79,6 +80,11 @@ func (c *Reconciler) checkAndUpdateService(ctx context.Context, rev *v1alpha1.Re
 	desiredService := service.DeepCopy()
 	desiredService.Spec.Selector = rawDesiredService.Spec.Selector
 	desiredService.Spec.Ports = rawDesiredService.Spec.Ports
+
+	err := utils.AddCustomDataFromRevisionSpecToServiceAnnotations(desiredService, rev)
+	if err != nil {
+		return nil, Unchanged, err
+	}
 
 	if equality.Semantic.DeepEqual(desiredService.Spec, service.Spec) {
 		return service, Unchanged, nil
